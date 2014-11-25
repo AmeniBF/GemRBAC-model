@@ -1,7 +1,8 @@
 GeRBAC-model
 ============
+This project has been developped at the SVV lab (http://www.svv.lu) of the University of Luxembourg (http://wwwen.uni.lu) by Ameni Ben Fadhel (http://wwwen.uni.lu/snt/people/ameni_ben_fadhel).
 
-In this project, we present the implementation of the GeRBAC model, a generalized RBAC model that supports the following RBAC policies:
+In this project, we present the implementation of the GeRBAC model, a generalized RBAC model that supports the various types of the following RBAC policies:
 * Prerequisite constraint
 * Cardinality constraint
 * Precedence and dependency constraint
