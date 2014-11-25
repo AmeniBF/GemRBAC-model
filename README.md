@@ -13,6 +13,7 @@ In this project, we present the implementation of the GeRBAC model, a generalize
 
 #Content
 This project contains:
+
 1. The GeRBAC model: RBACmodel.ecore
 2. The formalization of RBAC policies as OCL constraints: constraints.ocl
 3. An instance that satisfies all the RBAC policies: validModel.xmi
