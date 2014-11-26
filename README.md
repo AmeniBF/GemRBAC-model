@@ -1,8 +1,9 @@
-GeRBAC-model
+GemRBAC
 ============
-This project has been developped at the SVV lab (http://www.svv.lu) of the University of Luxembourg (http://wwwen.uni.lu) by Ameni Ben Fadhel (http://wwwen.uni.lu/snt/people/ameni_ben_fadhel).
+This project has been developed at the [SVV lab](http://www.svv.lu) of the [University of Luxembourg](http://wwwen.uni.lu) by [Ameni Ben Fadhel](http://wwwen.uni.lu/snt/people/ameni_ben_fadhel).
 
-In this project, we present the implementation of the GemRBAC model, a generalized model for Role-based Access Control that supports the various types of the following RBAC policies:
+GemRBAC is a generalized model for Role-based Access Control that supports various types of RBAC authorization constraints:
+
 * Prerequisite constraint
 * Cardinality constraint
 * Precedence and dependency constraint
@@ -12,14 +13,18 @@ In this project, we present the implementation of the GemRBAC model, a generaliz
 * Role delegation and revocation constraint
 * Context constraint
 
-#Content
-This project contains:
+More information on GemRBAC is available in this technical report:
 
-1. The GemRBAC model: RBACmodel.ecore
-2. The formalization of RBAC policies as OCL constraints: constraints.ocl
-3. An instance that satisfies all the RBAC policies: validModel.xmi
-4. For each RBAC policy, an instance that violates it.
+> Ameni Ben Fadhel, Domenico Bianculli, and Lionel Briand. __A Comprehensive Modeling Framework for Role-based Access Control Policies__. Technical Report TR-SnT-2014-15, SnT Centre - University of Luxembourg, September 2014.  Available online at http://hdl.handle.net/10993/18874
+
+#Content
+The project contains:
+
+* The Ecore version of the GemRBAC model (*model/GemRBAC.ecore*)
+* The formalization of the RBAC policies as OCL constraints (*model/constraints.ocl*)
+* An instance of the GemRBAC model that satisfies all the RBAC policies (*satisfying-instance/validInstance.xmi*)
+* For each RBAC policy, an instance that violates it (folder *violating-instances*)
 
 #Requirements
-* Ecore Tools (http://download.eclipse.org/ecoretools/updates/)
-* OCL Tool
+* Ecoretools (http://eclipse.org/ecoretools/)
+* Eclipse OCL (http://www.eclipse.org/modeling/mdt/?project=ocl)
