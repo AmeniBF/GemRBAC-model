@@ -15,7 +15,10 @@ GemRBAC is a generalized model for Role-based Access Control that supports vario
 
 More information on GemRBAC is available in this technical report:
 
-> Ameni Ben Fadhel, Domenico Bianculli, and Lionel Briand. __A Comprehensive Modeling Framework for Role-based Access Control Policies__. Technical Report TR-SnT-2014-15, SnT Centre - University of Luxembourg, September 2014.  Available online at http://hdl.handle.net/10993/18874
+> Ameni Ben Fadhel, Domenico Bianculli, and Lionel Briand. __A
+> Comprehensive Modeling Framework for Role-based Access Control
+> Policies__. Technical Report TR-SnT-2014-15, SnT Centre - University
+> of Luxembourg, November 2014.  Available online at http://hdl.handle.net/10993/18874
 
 #Content
 The project contains:
