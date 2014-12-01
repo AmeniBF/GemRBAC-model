@@ -1,6 +1,6 @@
 
 import ecore : 'http://www.eclipse.org/emf/2002/Ecore#/'
-import 'RBACmodel.ecore'
+import 'GemRBAC.ecore'
 
 package rbacmodel
 

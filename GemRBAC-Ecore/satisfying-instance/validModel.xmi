@@ -4,7 +4,8 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:rbacmodel="http://rbacmodel/1.0"
-    xsi:schemaLocation="http://rbacmodel/1.0 RBACmodel.ecore">
+    xsi:schemaLocation="http://rbacmodel/1.0 ../model/GemRBAC.ecore">
+    
   <sys businessTaskList="//@op.0 //@op.1 //@op.2 //@op.3"
       boundedPermissions="//@p.5 //@p.2"/>
   <Obj idObject="obj1"

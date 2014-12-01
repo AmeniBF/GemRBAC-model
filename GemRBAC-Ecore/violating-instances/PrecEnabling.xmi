@@ -4,7 +4,7 @@
     xmlns:xmi="http://www.omg.org/XMI"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:rbacmodel="http://rbacmodel/1.0"
-    xsi:schemaLocation="http://rbacmodel/1.0 RBACmodel.ecore">
+    xsi:schemaLocation="http://rbacmodel/1.0 ../model/GemRBAC.ecore">
   <Obj idObject="obj1"
       permissions="//@p.0 //@p.3"/>
   <Obj idObject="obj2"
