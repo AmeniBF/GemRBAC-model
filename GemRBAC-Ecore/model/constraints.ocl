@@ -198,9 +198,10 @@ let r2 : Role = Role.allInstances()
 	->select(r : Role | r.idRole = 'r1')
 	->any(true) , p : Permission = Permission.allInstances()
 	->select(o : Permission | o.idPermission = 'p3')
-	->any(true) , logr2 : Set(History) = History.allInstances()
-	->select(a : History | a.role = r2 and a.user = self.user) , logr1 : Set(History) =
-	self.user.accessHistory()
+	->any(true) , 
+	logr2 : Set(History) = History.allInstances()
+	->select(a : History | a.role = r2 and a.user = self.user) , 
+	logr1 : Set(History) = History.allInstances()
 	->select(a : History | a.role = r1 and a.user = self.user)
 in if self.activeRoles
 		->includes(r1)
@@ -253,7 +254,8 @@ let u : RBACUtility = RBACUtility.allInstances()
 		->includes(a))
 	->asSet() , logr2 : Set(History) = History.allInstances()
 	->select(a : History | a.role = r2 and perm2
-		->includes(a.permission) and a.user = self.user) , logr1 : Set(History) = History.allInstances()
+		->includes(a.permission) and a.user = self.user) , 
+		logr1 : Set(History) = History.allInstances()
 	->select(a : History | a.role = r1 and perm1
 		->includes(a.permission) and a.user = self.user) , log : Set(History) = logr1
 	->union(logr2) , opLog : Set(Operation) = log
@@ -311,13 +313,7 @@ in if boundedPermissions
 		endif
 	else true
 	endif
-    
-	context User
 
-	inv RoleHierarchyDelegation:
-	self.delegatedRoles
-	->forAll(r : Role | self.delegatedRoles
-		->includesAll(r.juniors))
 		
 	context Delegation
 
@@ -326,6 +322,8 @@ in if boundedPermissions
 	->asSet() = self.delegatedRole.permissions
 	->asSet()
 
+	
+	
 	context Delegation
 
 	inv PartialDelegation:
@@ -334,13 +332,49 @@ in if boundedPermissions
 
 	context Delegation
 
-	inv Transfer:
-	self.isTransfer implies self.delegatorUser.roles
-	->excludes(self.delegatedRole) and self.delegateUser.roles
-	->includes(self.delegatedRole)
+inv StrongTransfer:
+let roles : Set(Role) = self.delegatedRole.getAlljuniors()
+->including(self.delegatedRole)
+in
+self.isTransfer = delegationType:: strong implies 
+(self.delegatorUser.roles
+	->excludesAll(roles)) 
+	and (self.delegateUser.delegatedRoles
+	->includes(self.delegatedRole))
+
+context Delegation inv StaticWeakTransfer:
+	 
+	  let 
+	  acquiredRoles : Set(Role) = self.delegatorUser.roles
+	  ->union(self.delegatorUser.delegatedRoles),
+	  allowedRoles : Set(Role) = self.delegatedRole.getAlljuniors() -> select (r : Role | 
+	  	(r.seniors ->excluding(delegatedRole)) ->exists(r1 : Role | acquiredRoles ->includes(r1))),
+       roles : Set(Role) = (self.delegatedRole.getAlljuniors()
+	  ->including(self.delegatedRole)) - allowedRoles
+	  in self.isTransfer = delegationType:: weakStatic implies
+	   self.delegatorUser.roles
+	  ->excludesAll(roles) and  self.delegatorUser.roles
+	  ->includesAll(allowedRoles) and self.delegateUser.delegatedRoles
+	  ->includes(self.delegatedRole)
+	
+context Delegation inv DynamicWeakTransfer:
+	 let  acquiredRoles : Set(Role) = self.delegatorUser.roles
+	  ->union(self.delegatorUser.delegatedRoles),
+	  allowedRoles : Set(Role) = self.delegatedRole.getAlljuniors() -> select (r : Role | 
+	  	(r.seniors ->excluding(delegatedRole)) -> exists(r1 : Role | self.delegatorUser.sessions -> exists (s:Session| s.activeRoles ->includes(r1)))),
+	  roles : Set(Role) = (self.delegatedRole.getAlljuniors()
+	  ->including(self.delegatedRole)) - allowedRoles
+	 in  self.isTransfer = delegationType:: weakDynamic implies
+	  self.delegatorUser.roles
+	 ->excludesAll(roles) and self.delegatorUser.roles
+	  ->includesAll(allowedRoles) and self.delegateUser.delegatedRoles
+	  ->includes(self.delegatedRole)
+
+
+
 
 	context Delegation
-
+    
 	inv GrantDependent:
 	if self.isRevoked = true
 	then if self.delegatedRole.isDependent = true
@@ -368,5 +402,33 @@ in if boundedPermissions
 		->forAll(d | d.isRevoked = true)
 	else true
 	endif
+     
 
+     
+      context Session inv locationbased:
+     let userLocation: SpatialContext = self.user.userContext.oclAsType(SpatialContext), 
+         disabled: Set (Role) = self.user.roles -> select (r:Role | 
+         r.roleContext.oclAsType(SpatialContext) ->
+             forAll (loc: SpatialContext | not(loc.checkAccess(userLocation)))),   
+         enabled: Set (Role) = self.user.roles -> select (r:Role | 
+         r.roleContext.oclAsType(SpatialContext) ->
+             exists (loc: SpatialContext | loc.checkAccess(userLocation) = true)
+             )
+        in 
+             self.enabledRoles -> excludesAll(disabled) and self.enabledRoles -> includesAll(enabled)
+        
+              
+     context Session inv RoleContext:
+     let userContext: RBACContext = self.user.userContext,
+     disabled: Set (Role) = self.user.roles -> select (r:Role | 
+         r.roleContext ->
+             forAll (c: RBACContext | not(c.checkAccess(userContext)))),   
+     enabled: Set (Role) = self.user.roles -> select (r:Role | 
+         r.roleContext ->
+             exists (c: RBACContext | c.checkAccess(userContext) = true)
+             )
+        in 
+             self.enabledRoles -> excludesAll(disabled) and self.enabledRoles -> includesAll(enabled)
+   
+     
 endpackage

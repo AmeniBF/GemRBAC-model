@@ -4,6 +4,11 @@
   <eAnnotations source="http://www.eclipse.org/OCL/Import">
     <details key="ecore" value="http://www.eclipse.org/emf/2002/Ecore"/>
   </eAnnotations>
+  <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore">
+    <details key="invocationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="settingDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+    <details key="validationDelegates" value="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot"/>
+  </eAnnotations>
   <eClassifiers xsi:type="ecore:EClass" name="User">
     <eOperations name="assignRole">
       <eParameters name="r" eType="#//Role"/>
@@ -14,8 +19,6 @@
         eType="#//Role" eOpposite="#//Role/users"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="sessions" upperBound="-1"
         eType="#//Session" eOpposite="#//Session/user"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="userContext" upperBound="-1"
-        eType="#//RBACContext" eOpposite="#//RBACContext/user"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="delegation" upperBound="-1"
         eType="#//Delegation" eOpposite="#//Delegation/delegatorUser"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="recieveddelegation" upperBound="-1"
@@ -26,8 +29,7 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="delegatedRoles" upperBound="-1"
         eType="#//Role" eOpposite="#//Role/user"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="userContext" eType="#//RBACContext"
-        eOpposite="#//RBACContext/user"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="userContext" eType="#//RBACContext"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="userLog" upperBound="-1"
         eType="#//History" eOpposite="#//History/user"/>
   </eClassifiers>
@@ -37,6 +39,11 @@
     </eOperations>
     <eOperations name="accessHistory" upperBound="-1" eType="#//History"/>
     <eOperations name="logBOCurrentProcessInstance" upperBound="-1" eType="#//History"/>
+    <eOperations name="getAlljuniors" ordered="false" upperBound="-1" eType="#//Role">
+      <eAnnotations source="http://www.eclipse.org/emf/2002/Ecore/OCL/Pivot">
+        <details key="body" value="&#xA;&#x9;&#x9;&#xA;&#x9;&#x9;&#x9;if self.juniors -> notEmpty() then&#xA;&#x9;             self.juniors-> asSet() -> union (self.juniors-> asSet()-> collect (r:Role| r.getAlljuniors()-> asSet())->asSet())&#xA;&#x9;            &#xA;&#x9;             else  &#xA;&#x9;              self.juniors&#xA;&#x9;             endif "/>
+      </eAnnotations>
+    </eOperations>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idRole" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="users" lowerBound="1" upperBound="-1"
         eType="#//User" eOpposite="#//User/roles"/>
@@ -49,8 +56,6 @@
         eType="#//Session" eOpposite="#//Session/enabledRoles"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="permissions" lowerBound="1"
         upperBound="-1" eType="#//Permission" eOpposite="#//Permission/roles"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="roleContext" upperBound="-1"
-        eType="#//RBACContext" eOpposite="#//RBACContext/role"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="juniors" upperBound="-1"
         eType="#//Role" eOpposite="#//Role/seniors"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="seniors" upperBound="-1"
@@ -60,7 +65,7 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="delegation" upperBound="-1"
         eType="#//Delegation" eOpposite="#//Delegation/delegatedRole"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="roleContext" upperBound="-1"
-        eType="#//RBACContext" eOpposite="#//RBACContext/role"/>
+        eType="#//RBACContext"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="logRole" upperBound="-1"
         eType="#//History" eOpposite="#//History/role"/>
   </eClassifiers>
@@ -129,8 +134,6 @@
     <eOperations name="checkAccess" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean">
       <eParameters name="c" eType="#//RBACContext"/>
     </eOperations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="user" eType="#//User" eOpposite="#//User/userContext"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="role" eType="#//Role" eOpposite="#//Role/roleContext"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="logContext" upperBound="-1"
         eType="#//History" eOpposite="#//History/context"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="permission" eType="#//Permission"
@@ -148,9 +151,9 @@
     <eOperations name="getAbsoluteDelegationPath" upperBound="-1" eType="#//Delegation"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="idDelegation" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isRevoked" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTransfer" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTransfer" eType="#//delegationType"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="isTotal" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="starDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="startDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="endDate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="delegatorUser" lowerBound="1"
         eType="#//User" eOpposite="#//User/delegation"/>
@@ -182,7 +185,6 @@
         eOpposite="#//User/userLog"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="RBACUtility">
-    <eOperations name="getBusinessTaskList" lowerBound="1" upperBound="-1" eType="#//Operation"/>
     <eOperations name="getBoundPermission" lowerBound="1" upperBound="-1" eType="#//Permission"/>
     <eOperations name="getCurrentDate" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EDate"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="maxPermission" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
@@ -214,5 +216,11 @@
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="log" upperBound="-1" eType="#//History"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="delegationType">
+    <eLiterals name="grant"/>
+    <eLiterals name="strong"/>
+    <eLiterals name="weakStatic"/>
+    <eLiterals name="weakDynamic"/>
   </eClassifiers>
 </ecore:EPackage>
