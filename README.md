@@ -37,8 +37,7 @@ The project contains:
     * Subject-based BoD: SubjectBoD.xmi
   * Role delegation and revocation constraint:
     * Strong transfer delegation: StrongTransfer.xmi
-    * Static weak transfer: StaticWeakTransfer.xmi
-    * Dynamic weak transfer: DynamicWeakTransfer.xmi
+    * Static/dynamic weak transfer: StaticWeakTransfer.xmi, DynamicWeakTransfer.xmi 
     * Total/partial delegation: PartialDelegation.xmi, TotalDelegation.xmi
     * Strong/weak revocation: StrongRevocation.xmi
     * Cascading/non cascading revocation: CascadingRevocation.xmi
